@@ -16,17 +16,13 @@ const jsdom = require('jsdom');
 
 export function mockPlatform() {
   const diagnostics: Diagnostic[] = [];
-  const sys = mockStencilSystem();
-  const win = sys.createDom().parse({html: ''});
+  const config = mockBuildConfig();
+  const win = config.sys.createDom().parse({html: ''});
   const domApi = createDomApi(win.document);
 
-  const appBuildDir = `/build/app/`;
-
   const plt = createPlatformServer(
-    sys,
-    'App',
+    config,
     win,
-    appBuildDir,
     diagnostics,
     false
   );

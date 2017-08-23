@@ -89,11 +89,18 @@ export function initComponentInstance(plt: PlatformApi, elm: HostElement) {
   // fire off the user's componentWillLoad method (if one was provided)
   // componentWillLoad only runs ONCE, after instance's element has been
   // assigned as the host element, but BEFORE render() has been called
+  let willLoadPromise: Promise<any>;
   try {
-    instance.componentWillLoad && instance.componentWillLoad();
+    if (instance.componentWillLoad) {
+      // this instance does have a componentWillLoad() function
+      // it may have returned a promise, let's remember that for later
+      willLoadPromise = instance.componentWillLoad();
+    }
   } catch (e) {
     plt.onError(WILL_LOAD_ERROR, e, elm);
   }
+
+  return willLoadPromise;
 }
 
 

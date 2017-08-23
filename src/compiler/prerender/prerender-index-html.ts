@@ -10,7 +10,7 @@ export function prerenderIndexHtml(config: BuildConfig, ctx: BuildContext) {
   }
 
   // get the source index html content
-  return readFile(config.sys, config.indexHtmlSrc).then(indexSrcHtml => {
+  return readFile(config.sys, config.srcIndexHtml).then(indexSrcHtml => {
 
     if (!config.prerender) {
       // don't bother with a renderer if we don't need one
@@ -37,7 +37,7 @@ export function prerenderIndexHtml(config: BuildConfig, ctx: BuildContext) {
 
   }).catch(() => {
     // it's ok if there's no index file
-    config.logger.debug(`no index html: ${config.indexHtmlSrc}`);
+    config.logger.debug(`no index html: ${config.srcIndexHtml}`);
   });
 }
 
@@ -50,10 +50,10 @@ function writeIndexDest(config: BuildConfig, ctx: BuildContext, indexHtml: strin
 
   // add the prerendered html to our list of files to write
   // and cache the html to check against for next time
-  ctx.filesToWrite[config.indexHtmlBuild] = ctx.appFiles.indexHtml = indexHtml;
+  ctx.filesToWrite[config.wwwIndexHtml] = ctx.appFiles.indexHtml = indexHtml;
 
   // keep track of how many times we built the index file
   // useful for debugging/testing
   ctx.indexBuildCount++;
-  config.logger.debug(`optimizeHtml, write: ${config.indexHtmlBuild}`);
+  config.logger.debug(`optimizeHtml, write: ${config.wwwIndexHtml}`);
 }

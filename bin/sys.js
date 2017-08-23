@@ -209,11 +209,14 @@ module.exports = Object.defineProperties({
   },
 
   vm: {
-    createContext: function(sandbox) {
+    createContext: function(wwwDir, sandbox) {
       var vm = require('vm');
       // https://github.com/tmpvar/jsdom/issues/1724
       // manually adding a fetch polyfill until jsdom adds it
-      sandbox.fetch = require('./node-fetch');
+      // var p = require('./patch-fetch-xhr');
+      console.log('wwwDir', wwwDir, 'sandbox', sandbox)
+      // p.patchFetchXhr(wwwDir, sandbox);
+
       return vm.createContext(sandbox);
     },
     runInContext: function(code, contextifiedSandbox, options) {

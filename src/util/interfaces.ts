@@ -286,10 +286,11 @@ export interface BuildConfig {
   namespace?: string;
   global?: string;
   srcDir?: string;
+  wwwDir?: string;
   buildDir?: string;
   collectionDir?: string;
-  indexHtmlSrc?: string;
-  indexHtmlBuild?: string;
+  srcIndexHtml?: string;
+  wwwIndexHtml?: string;
   publicPath?: string;
   generateCollection?: boolean;
   bundles?: Bundle[];
@@ -644,7 +645,7 @@ export interface HostMeta {
 
 
 export interface ComponentInstance {
-  componentWillLoad?: () => void;
+  componentWillLoad?: () => Promise<any>;
   componentDidLoad?: () => void;
   componentWillUpdate?: () => void;
   componentDidUpdate?: () => void;
@@ -1022,7 +1023,7 @@ export interface StencilSystem {
     resolve(from: string, to: string): string;
   };
   vm?: {
-    createContext(sandbox?: any): any;
+    createContext(wwwDir: string, sandbox?: any): any;
     runInContext(code: string, contextifiedSandbox: any, options?: any): any;
   };
   watch?(paths: string | string[], opts?: any): FSWatcher;

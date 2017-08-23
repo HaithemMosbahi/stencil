@@ -26,7 +26,7 @@ export function prerenderApp(config: BuildConfig, ctx: BuildContext) {
   }
 
   // get the source index html content
-  return readFile(config.sys, config.indexHtmlSrc).then(indexSrcHtml => {
+  return readFile(config.sys, config.srcIndexHtml).then(indexSrcHtml => {
     // let's do this
     return new Promise(resolve => {
       drainPrerenderQueue(config, ctx, indexSrcHtml, resolve);
@@ -34,7 +34,7 @@ export function prerenderApp(config: BuildConfig, ctx: BuildContext) {
 
   }).catch(() => {
     const d = buildError(ctx.diagnostics);
-    d.messageText = `missing index html: ${config.indexHtmlSrc}`;
+    d.messageText = `missing index html: ${config.srcIndexHtml}`;
   });
 }
 

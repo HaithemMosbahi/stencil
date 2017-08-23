@@ -1,7 +1,7 @@
 import { assignHostContentSlots } from '../core/renderer/slot';
-import { BuildContext, ComponentMeta, ComponentRegistry,
+import { BuildConfig, BuildContext, ComponentMeta, ComponentRegistry,
   CoreContext, Diagnostic, FilesMap, HostElement,
-  ModuleCallbacks, PlatformApi, AppGlobal, StencilSystem } from '../util/interfaces';
+  ModuleCallbacks, PlatformApi, AppGlobal } from '../util/interfaces';
 import { createDomApi } from '../core/renderer/dom-api';
 import { createDomControllerServer } from './dom-controller-server';
 import { createQueueServer } from './queue-server';
@@ -16,10 +16,8 @@ import { proxyControllerProp } from '../core/instance/proxy';
 
 
 export function createPlatformServer(
-  sys: StencilSystem,
-  appNamespace: string,
+  config: BuildConfig,
   win: any,
-  appBuildDir: string,
   diagnostics: Diagnostic[],
   isPrerender: boolean,
   ctx?: BuildContext
@@ -52,11 +50,14 @@ export function createPlatformServer(
   const App: AppGlobal = {};
 
   // add the app's global to the window context
-  win[appNamespace] = App;
+  win[config.namespace] = App;
+
+  const appWwwDir = config.wwwDir;
+  const appBuildDir = config.buildDir;
 
   // create the sandboxed context with a new instance of a V8 Context
   // V8 Context provides an isolated global environment
-  sys.vm.createContext(win);
+  config.sys.vm.createContext(appWwwDir, win);
 
   // execute the global scripts (if there are any)
   runGlobalScripts();
@@ -185,7 +186,7 @@ export function createPlatformServer(
       }
 
       // create the module filePath we'll be reading
-      const jsFilePath = normalizePath(sys.path.join(appBuildDir, `${moduleId}.js`));
+      const jsFilePath = normalizePath(config.sys.path.join(appBuildDir, `${moduleId}.js`));
 
       if (!pendingModuleFileReads[jsFilePath]) {
         // not already actively reading this file
@@ -194,12 +195,12 @@ export function createPlatformServer(
 
         // let's kick off reading the module
         // this could come from the cache or a new readFile
-        getJsFile(sys, ctx, jsFilePath).then(jsContent => {
+        getJsFile(config.sys, ctx, jsFilePath).then(jsContent => {
           // remove it from the list of file reads we're waiting on
           delete pendingModuleFileReads[jsFilePath];
 
           // run the code in this sandboxed context
-          sys.vm.runInContext(jsContent, win, { timeout: 10000 });
+          config.sys.vm.runInContext(jsContent, win, { timeout: 10000 });
 
         }).catch(err => {
           onError(LOAD_BUNDLE_ERROR, err, elm);
@@ -218,7 +219,7 @@ export function createPlatformServer(
       if (styleId) {
         // we've got a style id to load up
         // create the style filePath we'll be reading
-        const styleFilePath = normalizePath(sys.path.join(appBuildDir, `${styleId}.css`));
+        const styleFilePath = normalizePath(config.sys.path.join(appBuildDir, `${styleId}.css`));
 
         if (!stylesMap[styleFilePath]) {
           // this style hasn't been added to our collection yet
@@ -227,7 +228,7 @@ export function createPlatformServer(
             // we're not already actively opening this file
             pendingStyleFileReads[styleFilePath] = true;
 
-            getCssFile(sys, ctx, styleFilePath).then(cssContent => {
+            getCssFile(config.sys, ctx, styleFilePath).then(cssContent => {
               delete pendingStyleFileReads[styleFilePath];
 
               // finished reading the css file
@@ -259,7 +260,7 @@ export function createPlatformServer(
       return;
     }
 
-    sys.vm.runInContext(ctx.appFiles.global, win);
+    config.sys.vm.runInContext(ctx.appFiles.global, win);
   }
 
   function onError(type: number, err: Error, elm: HostElement) {

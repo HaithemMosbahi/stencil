@@ -32,7 +32,7 @@ export function prerender(config: BuildConfig) {
   }
 
   // keep track of how long the entire build process takes
-  const timeSpan = config.logger.createTimeSpan(`build, ${config.devMode ? 'dev' : 'prod'} mode, started`);
+  const timeSpan = config.logger.createTimeSpan(`prerender, ${config.devMode ? 'dev' : 'prod'} mode, started`);
 
   // begin the build
   return Promise.resolve().then(() => {
@@ -83,7 +83,7 @@ export function prerender(config: BuildConfig) {
       statusColor = 'red';
     }
 
-    timeSpan.finish(`build ${buildStatus}`, statusColor, true, true);
+    timeSpan.finish(`prerender ${buildStatus}`, statusColor, true, true);
 
     if (typeof ctx.onFinish === 'function') {
       // fire off any provided onFinish fn every time the build finishes
@@ -102,7 +102,7 @@ export function prerender(config: BuildConfig) {
 
 function copyWWW(config: BuildConfig) {
   const prerenderDir = config.prerender.prerenderDir;
-  const wwwDir = config.sys.path.dirname(config.indexHtmlBuild);
+  const wwwDir = config.wwwDir;
 
   return config.sys.emptyDir(prerenderDir).then(() => {
     return config.sys.copy(wwwDir, prerenderDir);
