@@ -19,6 +19,7 @@ import { proxyControllerProp } from '../core/instance/proxy';
 export function createPlatformServer(
   config: BuildConfig,
   win: any,
+  doc: any,
   diagnostics: Diagnostic[],
   isPrerender: boolean,
   ctx?: BuildContext
@@ -42,6 +43,8 @@ export function createPlatformServer(
   Context.isClient = false;
   Context.isServer = true;
   Context.isPrerender = isPrerender;
+  Context.window = win;
+  Context.document = doc;
 
   // add the Core global to the window context
   // Note: "Core" is not on the window context on the client-side

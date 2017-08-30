@@ -25,6 +25,7 @@ export function mockPlatform() {
   const plt = createPlatformServer(
     config,
     win,
+    win.document,
     diagnostics,
     false
   );

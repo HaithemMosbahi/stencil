@@ -12,6 +12,8 @@ export interface CoreContext {
   isClient?: boolean;
   isServer?: boolean;
   isPrerender?: boolean;
+  window?: Window;
+  document?: Document;
   mode?: string;
   [contextId: string]: any;
 }

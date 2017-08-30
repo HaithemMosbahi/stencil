@@ -37,6 +37,7 @@ export function hydrateHtml(config: BuildConfig, ctx: BuildContext, registry: Co
   const plt = createPlatformServer(
     config,
     win,
+    doc,
     hydrateResults.diagnostics,
     opts.isPrerender,
     ctx
