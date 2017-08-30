@@ -58,14 +58,14 @@ export function validateBuildConfig(config: BuildConfig) {
     config.wwwDir = DEFAULT_WWW_DIR;
   }
   if (!path.isAbsolute(config.wwwDir)) {
-    config.buildDir = normalizePath(path.join(config.rootDir, config.wwwDir));
+    config.wwwDir = normalizePath(path.join(config.rootDir, config.wwwDir));
   }
 
   if (typeof config.buildDir !== 'string') {
     config.buildDir = DEFAULT_BUILD_DIR;
   }
   if (!path.isAbsolute(config.buildDir)) {
-    config.buildDir = normalizePath(path.join(config.rootDir, config.buildDir));
+    config.buildDir = normalizePath(path.join(config.wwwDir, config.buildDir));
   }
 
   if (typeof config.collectionDir !== 'string') {
