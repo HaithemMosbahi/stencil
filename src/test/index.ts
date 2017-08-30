@@ -255,7 +255,6 @@ export function mockFs() {
   };
 
   fs.writeFileSync = function() {
-    console.log('writeFileSync', arguments);
     return orgwriteFileSync.apply(fs, arguments);
   };
 

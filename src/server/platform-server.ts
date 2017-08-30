@@ -6,6 +6,7 @@ import { createDomApi } from '../core/renderer/dom-api';
 import { createDomControllerServer } from './dom-controller-server';
 import { createQueueServer } from './queue-server';
 import { createRenderer } from '../core/renderer/patch';
+import { getAppFileName } from '../compiler/app/app-core';
 import { getCssFile, getJsFile, normalizePath } from '../compiler/util';
 import { h, t } from '../core/renderer/h';
 import { DID_LOAD_ERROR, INIT_INSTANCE_ERROR, INITIAL_LOAD_ERROR, LOAD_BUNDLE_ERROR, MEMBER_PROP,
@@ -53,7 +54,7 @@ export function createPlatformServer(
   win[config.namespace] = App;
 
   const appWwwDir = config.wwwDir;
-  const appBuildDir = config.buildDir;
+  const appBuildDir = config.sys.path.join(config.buildDir, getAppFileName(config));
 
   // create the sandboxed context with a new instance of a V8 Context
   // V8 Context provides an isolated global environment

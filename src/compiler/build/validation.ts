@@ -285,7 +285,7 @@ const DEFAULT_HASHED_FILENAME_LENTH = 8;
 const DEFAULT_EXCLUDES = ['node_modules', 'bower_components'];
 const DEFAULT_WATCH_IGNORED_REGEX = /(\.(jpg|jpeg|png|gif|woff|woff2|ttf|eot)|(?:^|[\\\/])(\.(?!\.)[^\\\/]+)$)$/i;
 
-const DEFAULT_PRERENDER_CONFIG: PrerenderConfig = {
+export const DEFAULT_PRERENDER_CONFIG: PrerenderConfig = {
   prerenderDir: 'dist/prerender',
   crawl: true,
   include: [
@@ -296,5 +296,5 @@ const DEFAULT_PRERENDER_CONFIG: PrerenderConfig = {
   removeUnusedStyles: true,
   collapseWhitespace: true,
   maxConcurrent: 4,
-  host: 'prerender.stenciljs.com'
+  host: 'dev.prerender.stenciljs.com'
 };

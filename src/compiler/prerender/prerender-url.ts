@@ -35,11 +35,11 @@ export function prerenderUrl(config: BuildConfig, ctx: BuildContext, indexSrcHtm
       // hydrating to string is done!!
       // let's use this updated html for the index content now
       Object.assign(results, hydratedResults);
-
-    }).catch(err => {
-      // ahh man! what happened!
-      catchError(ctx.diagnostics, err);
     });
+
+  }).catch(err => {
+    // ahh man! what happened!
+    catchError(ctx.diagnostics, err);
 
   }).then(() => {
     timeSpan.finish(`prerender, finished: ${prerenderUrl.url}`);

@@ -1,10 +1,10 @@
 import { BuildConfig, BuildContext, ComponentRegistry, HydrateOptions,
   HydrateResults, LoadComponentRegistry } from '../util/interfaces';
+import { DEFAULT_PRERENDER_CONFIG, validateBuildConfig } from '../compiler/build/validation';
 import { getBuildContext } from '../compiler/util';
 import { getRegistryJsonFilePath } from '../compiler/app/generate-app-files';
 import { hydrateHtml } from './hydrate-html';
 import { parseComponentRegistry } from '../util/data-parse';
-import { validateBuildConfig } from '../compiler/build/validation';
 
 
 export function createRenderer(config: BuildConfig, registry?: ComponentRegistry, ctx?: BuildContext) {
@@ -129,7 +129,7 @@ function validateHydrateOptions(config: BuildConfig, opts: HydrateOptions) {
 
   const urlObj = config.sys.url.parse(opts.url);
   if (!urlObj.protocol) urlObj.protocol = 'https:';
-  if (!urlObj.hostname) urlObj.hostname = 'prerender.stenciljs.com';
+  if (!urlObj.hostname) urlObj.hostname = DEFAULT_PRERENDER_CONFIG.host;
 
   opts.url = config.sys.url.format(urlObj);
 }
