@@ -3,9 +3,9 @@ export { CssClassMap } from './jsx-interfaces';
 
 
 export interface CoreContext {
-  addListener?: AddEventListenerApi;
+  addListener?: AddEventListener;
   attr?: number;
-  dom?: DomControllerApi;
+  dom?: DomController;
   emit?: (elm: Element, eventName: string, data?: EventEmitterData) => void;
   enableListener?: EventListenerEnable;
   eventNameFn?: (eventName: string) => string;
@@ -23,7 +23,7 @@ export interface AppGlobal {
 }
 
 
-export interface AddEventListenerApi {
+export interface AddEventListener {
   (elm: Element|Document|Window, eventName: string, cb: EventListenerCallback, opts?: ListenOptions): Function;
 }
 
@@ -54,7 +54,7 @@ export interface Now {
 }
 
 
-export interface DomControllerApi {
+export interface DomController {
   read: DomControllerCallback;
   write: DomControllerCallback;
   raf: DomControllerCallback;
@@ -645,9 +645,9 @@ export interface HostMeta {
 
 
 export interface ComponentInstance {
-  componentWillLoad?: () => Promise<any>;
+  componentWillLoad?: () => Promise<void>;
   componentDidLoad?: () => void;
-  componentWillUpdate?: () => void;
+  componentWillUpdate?: () => Promise<void>;
   componentDidUpdate?: () => void;
   componentDidUnload?: () => void;
 

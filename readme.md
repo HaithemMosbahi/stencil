@@ -8,6 +8,8 @@ Stencil components are just Web Components, so they work in any major framework 
 
 Stencil also enables a number of key capabilities on top of Web Components, in particular Server Side Rendering (SSR) without the need to run a headless browser, pre-rendering, and objects-as-properties (instead of just strings).
 
+*Note: Stencil and Ionic are completely independent projects. Stencil does not prescribe any specific UI framework, but Ionic is the largest user of Stencil (today!)*
+
 ## Why Stencil?
 
 Stencil is a new approach to a popular idea: building fast and feature-rich apps in the browser. Stencil was created to take advantage of major new capabilities available natively in the browser, such as Custom Elements v1, enabling developers to ship far less code and build faster apps that are compatible with any and all frameworks.
@@ -21,7 +23,7 @@ Compared to using Custom Elements directly, inside of every Stencil component is
 To start a new project using Stencil, clone the starter project and get to work:
 
 ```bash
-git clone git@github.com:ionic-team/stencil-starter my-app
+git clone https://github.com/ionic-team/stencil-starter.git my-app
 cd my-app
 git remote rm origin
 npm install
@@ -36,7 +38,7 @@ npm start
 
 ## Creating components
 
-Stencil components are plan ES6/TypeScript classes with some decorator metadata.
+Stencil components are plain ES6/TypeScript classes with some decorator metadata.
 
 Create new components by creating files with a `.tsx` extension, such as `my-component.tsx`, and place them in `src/components`.
 
@@ -108,11 +110,11 @@ The API for stencil closely mirrors the API for Custom Elements v1.
 
 | Decorator      | Description                             |
 | -------------- | ---                                     |
-| `@Component()` | Indicate a class is a Stencil component |
+| `@Component()` | Indicate a class is a Stencil component. |
 |                |                                         |
 | `@Prop()`      | Creates a property that will exist on the element and be data-bound to this component.  |
 | `@State()`     | Creates a local state variable that will not be placed on the element. |
-| `@Method()`    | Expose specifc methods the be publicly accessible. |
+| `@Method()`    | Expose specifc methods to be publicly accessible. |
 
 
 ## Why "Stencil?"
@@ -120,3 +122,14 @@ The API for stencil closely mirrors the API for Custom Elements v1.
 A Stencil is a tool artists use for drawing perfect shapes easily. We want Stencil to be a similar tool for web developers: a tool that helps web developers build powerful Web Components and apps that use them, but without creating non-standard runtime requirements.
 
 Stencil is a tool developers use to create Web Components with some powerful features baked in, but it gets out of the way at runtime.
+
+
+## Browser Support
+
+Web Components, specifically Custom Elements, are natively supported in Chrome and Safari and are coming to both Edge and Firefox. A dynamic loader is already included in order to only load the polyfills for the browsers that require them. Additionally, Stencil polyfills `fetch` and `Promise` for browsers that do not support them natively.
+
+ - Chrome (and all Chromium based browsers)
+ - Safari
+ - Edge
+ - Firefox
+ - IE 11

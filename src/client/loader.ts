@@ -14,7 +14,9 @@ import { LoadComponentRegistry } from '../util/interfaces';
   x.innerHTML = (components.map(function(c) { return c[0]; }).join(',') + '{visibility:hidden}.💎{visibility:inherit}').toLowerCase();
   document.head.insertBefore(x, document.head.firstChild);
 
-  // request the core file this browser needs
+  // request the core this browser needs
+  // test for native support of custom elements and fetch
+  // if either of those are not supported, then use the core w/ polyfills
   x = document.createElement('script');
   x.src = (window.customElements && window.fetch) ? appCore : appCorePolyfilled;
   document.head.appendChild(x);

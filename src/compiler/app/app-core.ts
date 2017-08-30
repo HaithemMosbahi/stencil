@@ -32,37 +32,32 @@ export function generateCoreES5WithPolyfills(config: BuildConfig, globalJsConten
 
   const readFilePromises: Promise<string>[] = [];
 
-  // first concat all of the polyfills
+  // first load up all of the polyfill content
   [
     'document-register-element.js',
+    'promise.js',
     'fetch.js',
+    'request-animation-frame.js',
+    'closest.js',
     'performance-now.js'
   ].forEach(polyfillFile => {
     const staticName = sys.path.join('polyfills', polyfillFile);
     readFilePromises.push(sys.getClientCoreFile({ staticName: staticName }));
   });
 
-  // concat the main core file
+  // also get the main core file
   readFilePromises.push(sys.getClientCoreFile({ staticName: staticName }));
 
   return Promise.all(readFilePromises).then(results => {
-    const docRegistryPolyfillContent = results[0];
-    const fetchPolyfillContent = results[1];
-    const perfNowPolyfillContent = results[2];
-
-    const coreContent = wrapCoreJs(config, [
+    // wrap the core content code
+    // which is the last result in the array
+    results[results.length - 1] = wrapCoreJs(config, [
       globalJsContent.join('\n'),
-      results[3]
+      results[results.length - 1]
     ].join('\n').trim());
 
-    // replace the default core with the project's namespace
-    // concat the custom element polyfill and projects core code
-    return [
-      docRegistryPolyfillContent,
-      fetchPolyfillContent,
-      perfNowPolyfillContent,
-      coreContent
-    ].join('\n').trim();
+    // concat the polyfills above the core content
+    return results.join('\n').trim();
   });
 }
 

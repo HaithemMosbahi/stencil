@@ -1,8 +1,11 @@
 import {
+  AddEventListener,
   BuildConfig,
   ComponentDecorator,
   CssClassMap,
+  DomController,
   ElementDecorator,
+  EventListenerEnable,
   EventDecorator,
   EventEmitter,
   HydrateOptions,
@@ -44,9 +47,12 @@ export interface HostElement extends HTMLElement {
 }
 
 export {
+  AddEventListener,
   BuildConfig,
   CssClassMap,
+  DomController,
   EventEmitter,
+  EventListenerEnable,
   HydrateOptions,
   AppGlobal,
   StencilSystem,
