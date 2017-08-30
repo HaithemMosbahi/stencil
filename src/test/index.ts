@@ -1,4 +1,4 @@
-import { BuildConfig, ComponentMeta, Diagnostic, DomApi, HostElement, HostContentNodes,
+import { BuildConfig, ComponentMeta, Diagnostic, DomApi, HostContentNodes, HostElement,
   HydrateOptions, Logger, PlatformApi, StencilSystem, VNode } from '../util/interfaces';
 import { createDomApi } from '../core/renderer/dom-api';
 import { createPlatformServer } from '../server/platform-server';
@@ -12,6 +12,8 @@ const MemoryFileSystem = require('memory-fs');
 const path = require('path');
 const vm = require('vm');
 const jsdom = require('jsdom');
+const typescript = require('typescript');
+const url = require('url');
 
 
 export function mockPlatform() {
@@ -145,9 +147,19 @@ export function mockStencilSystem() {
       }
     },
 
-    typescript: require('typescript'),
+    typescript: typescript,
 
-    vm: vm,
+    url: url,
+
+    vm: {
+      createContext: function(wwwDir, sandbox) {
+        wwwDir;
+        return vm.createContext(sandbox);
+      },
+      runInContext: function(code, contextifiedSandbox, options) {
+        vm.runInContext(code, contextifiedSandbox, options);
+      }
+    },
 
     watch: mockWatch
   };
@@ -224,6 +236,8 @@ export function mockFs() {
   const fs = new MemoryFileSystem();
 
   const orgreadFileSync = fs.readFileSync;
+  const orgwriteFileSync = fs.writeFileSync;
+
   fs.readFileSync = function() {
     try {
       return orgreadFileSync.apply(fs, arguments);
@@ -238,6 +252,11 @@ export function mockFs() {
         throw e;
       }
     }
+  };
+
+  fs.writeFileSync = function() {
+    console.log('writeFileSync', arguments);
+    return orgwriteFileSync.apply(fs, arguments);
   };
 
   return fs;

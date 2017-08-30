@@ -66,7 +66,7 @@ describe('build', () => {
     });
   });
 
-  it('should rebuild for two changed modules', () => {
+  fit('should rebuild for two changed modules', () => {
     ctx = {};
     config.bundles = [
       { components: ['cmp-a'] },
@@ -77,25 +77,31 @@ describe('build', () => {
     writeFileSync('/src/cmp-b.tsx', `@Component({ tag: 'cmp-b' }) export class CmpB {}`);
     writeFileSync('/src/cmp-c.tsx', `@Component({ tag: 'cmp-c' }) export class CmpC {}`);
 
-    return build(config, ctx).then(() => {
+    console.log('hi')
+
+    return build(config, ctx).then(r => {
+      console.log('##',r)
       expect(ctx.isChangeBuild).toBeFalsy();
 
-      return new Promise(resolve => {
-        ctx.onFinish = resolve;
-        writeFileSync('/src/cmp-a.tsx', `@Component({ tag: 'cmp-a' }) export class CmpA { constructor() { 'hi'; } }`);
-        writeFileSync('/src/cmp-b.tsx', `@Component({ tag: 'cmp-b' }) export class CmpB { constructor() { 'hi'; }}`);
-        ctx.watcher.$triggerEvent('change', '/src/cmp-a.tsx');
-        ctx.watcher.$triggerEvent('change', '/src/cmp-b.tsx');
+      // return new Promise(resolve => {
+      //   ctx.onFinish = resolve;
+      //   writeFileSync('/src/cmp-a.tsx', `@Component({ tag: 'cmp-a' }) export class CmpA { constructor() { 'hi'; } }`);
+      //   writeFileSync('/src/cmp-b.tsx', `@Component({ tag: 'cmp-b' }) export class CmpB { constructor() { 'hi'; }}`);
+      //   ctx.watcher.$triggerEvent('change', '/src/cmp-a.tsx');
+      //   ctx.watcher.$triggerEvent('change', '/src/cmp-b.tsx');
 
-      }).then((r: BuildResults) => {
-        expect(ctx.isChangeBuild).toBe(true);
-        expect(ctx.transpileBuildCount).toBe(2);
-        expect(ctx.moduleBundleCount).toBe(2);
+      // }).then((r: BuildResults) => {
+      //   console.log(r)
+      //   expect(ctx.isChangeBuild).toBe(true);
+      //   // expect(ctx.transpileBuildCount).toBe(2);
+      //   // expect(ctx.moduleBundleCount).toBe(2);
 
-        expect(wroteFile(r, 'cmp-a.js')).toBe(true);
-        expect(wroteFile(r, 'cmp-b.js')).toBe(true);
-        expect(wroteFile(r, 'cmp-c.js')).toBe(false);
-      });
+      //   // expect(wroteFile(r, 'cmp-a.js')).toBe(true);
+      //   // expect(wroteFile(r, 'cmp-b.js')).toBe(true);
+      //   // expect(wroteFile(r, 'cmp-c.js')).toBe(false);
+      // });
+    }).catch(e => {
+      console.log(e)
     });
   });
 
@@ -560,6 +566,7 @@ describe('build', () => {
   }
 
   function writeFileSync(filePath: string, data: any) {
+    console.log('writeFileSync', filePath);
     (<any>config.sys.fs).writeFileSync(filePath, data);
   }
 
