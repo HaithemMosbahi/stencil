@@ -1,4 +1,4 @@
-import { BuildConfig, BuildContext, PrerenderUrl } from '../../util/interfaces';
+import { BuildConfig, BuildContext, PrerenderLocation } from '../../util/interfaces';
 import { catchError, hasError, readFile } from '../util';
 import { prerenderUrl } from './prerender-url';
 
@@ -19,12 +19,13 @@ export function prerenderIndexHtml(config: BuildConfig, ctx: BuildContext) {
       return Promise.resolve();
     }
 
-    const p: PrerenderUrl = {
-      url: '/'
+    const prerenderLocation: PrerenderLocation = {
+      url: '/',
+      pathname: '/'
     };
 
     // now let's optimize this thang (which is async)
-    return prerenderUrl(config, ctx, indexSrcHtml, p).then(results => {
+    return prerenderUrl(config, ctx, indexSrcHtml, prerenderLocation).then(results => {
       // update our index file with that hydrated html!
       writeIndexDest(config, ctx, results.html);
 

@@ -322,7 +322,7 @@ export interface RenderOptions {
 
 export interface PrerenderConfig extends RenderOptions {
   crawl?: boolean;
-  include?: PrerenderUrl[];
+  include?: PrerenderLocation[];
   prerenderDir?: string;
   maxConcurrent?: number;
   userAgent?: string;
@@ -333,8 +333,9 @@ export interface PrerenderConfig extends RenderOptions {
 }
 
 
-export interface PrerenderUrl {
-  url: string;
+export interface PrerenderLocation {
+  pathname?: string;
+  url?: string;
   status?: PrerenderStatus;
 }
 
@@ -409,13 +410,14 @@ export interface BuildContext {
   moduleBundleCount?: number;
   styleBundleCount?: number;
   localPrerenderServer?: any;
+  prerenderedUrls?: number;
 
   diagnostics?: Diagnostic[];
   registry?: ComponentRegistry;
   manifest?: Manifest;
   onFinish?: (buildResults: BuildResults) => void;
 
-  prerenderUrlQueue?: PrerenderUrl[];
+  prerenderUrlQueue?: PrerenderLocation[];
 }
 
 

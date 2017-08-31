@@ -1,4 +1,4 @@
-import { BuildConfig, BuildContext, HydrateResults, PrerenderStatus } from '../../util/interfaces';
+import { BuildConfig, BuildContext, HydrateResults, PrerenderStatus, PrerenderLocation } from '../../util/interfaces';
 import { buildError, catchError, hasError, readFile } from '../util';
 import { prerenderUrl } from './prerender-url';
 
@@ -133,11 +133,13 @@ function crawlAnchorsForNextUrls(config: BuildConfig, ctx: BuildContext, results
 }
 
 
-function normalizePrerenderUrl(config: BuildConfig, windowLocationHref: string, url: string) {
-  try {
-    if (typeof url !== 'string') return null;
+export function normalizePrerenderUrl(config: BuildConfig, windowLocationHref: string, urlStr: string) {
+  let p: PrerenderLocation = null;
 
-    const parsedUrl = config.sys.url.parse(url);
+  try {
+    if (typeof urlStr !== 'string') return null;
+
+    let parsedUrl = config.sys.url.parse(urlStr);
 
     // don't bother for basically empty <a> tags
     // or urls that are not on the same domain
@@ -148,29 +150,34 @@ function normalizePrerenderUrl(config: BuildConfig, windowLocationHref: string, 
     parsedUrl.hash = null;
 
     // convert it back to a nice in pretty url
-    url = config.sys.url.format(parsedUrl);
+    p = {
+      url: config.sys.url.format(parsedUrl)
+    };
 
     // resolve it against the base window location url
-    url = config.sys.url.resolve(windowLocationHref, url);
+    p.url = config.sys.url.resolve(windowLocationHref, p.url);
+
+    parsedUrl = config.sys.url.parse(p.url);
+
+    p.pathname = parsedUrl.pathname;
 
   } catch (e) {
-    config.logger.error(`url: ${e}`);
+    config.logger.error(`normalizePrerenderUrl: ${e}`);
     return null;
   }
 
-  return url;
+  return p;
 }
 
 
-function addUrlToProcess(config: BuildConfig, windowLocationHref: string, ctx: BuildContext, url: string) {
-  url = normalizePrerenderUrl(config, windowLocationHref, url);
+function addUrlToProcess(config: BuildConfig, windowLocationHref: string, ctx: BuildContext, urlStr: string) {
+  const pUrl = normalizePrerenderUrl(config, windowLocationHref, urlStr);
 
-  if (!url || ctx.prerenderUrlQueue.some(p => p.url === url)) return;
+  if (!pUrl || ctx.prerenderUrlQueue.some(p => p.url === pUrl.url)) return;
 
-  ctx.prerenderUrlQueue.push({
-    url: url,
-    status: PrerenderStatus.pending
-  });
+  pUrl.status = PrerenderStatus.pending;
+
+  ctx.prerenderUrlQueue.push(pUrl);
 }
 
 

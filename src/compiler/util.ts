@@ -32,6 +32,7 @@ export function resetBuildContext(ctx: BuildContext) {
   ctx.indexBuildCount = 0;
   ctx.moduleBundleCount = 0;
   ctx.styleBundleCount = 0;
+  ctx.prerenderedUrls = 0;
   delete ctx.localPrerenderServer;
 }
 

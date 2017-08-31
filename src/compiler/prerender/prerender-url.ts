@@ -1,10 +1,10 @@
-import { BuildConfig, BuildContext, HydrateOptions, HydrateResults, PrerenderUrl } from '../../util/interfaces';
+import { BuildConfig, BuildContext, HydrateOptions, HydrateResults, PrerenderLocation } from '../../util/interfaces';
 import { catchError } from '../util';
 import { createRenderer } from '../../server/index';
 
 
-export function prerenderUrl(config: BuildConfig, ctx: BuildContext, indexSrcHtml: string, prerenderUrl: PrerenderUrl) {
-  const timeSpan = config.logger.createTimeSpan(`prerender, started: ${prerenderUrl.url}`);
+export function prerenderUrl(config: BuildConfig, ctx: BuildContext, indexSrcHtml: string, prerenderLocation: PrerenderLocation) {
+  const timeSpan = config.logger.createTimeSpan(`prerender, started: ${prerenderLocation.pathname}`);
 
   const results: HydrateResults = {
     diagnostics: []
@@ -16,7 +16,7 @@ export function prerenderUrl(config: BuildConfig, ctx: BuildContext, indexSrcHtm
 
     // create the hydrate options from the prerender config
     const hydrateOpts: HydrateOptions = Object.assign({}, config.prerender);
-    hydrateOpts.url = prerenderUrl.url;
+    hydrateOpts.url = prerenderLocation.url;
     hydrateOpts.isPrerender = true;
 
     // set the input html which we just read from the src index html file
@@ -35,6 +35,8 @@ export function prerenderUrl(config: BuildConfig, ctx: BuildContext, indexSrcHtm
       // hydrating to string is done!!
       // let's use this updated html for the index content now
       Object.assign(results, hydratedResults);
+
+      ctx.prerenderedUrls++;
     });
 
   }).catch(err => {
@@ -42,7 +44,7 @@ export function prerenderUrl(config: BuildConfig, ctx: BuildContext, indexSrcHtm
     catchError(ctx.diagnostics, err);
 
   }).then(() => {
-    timeSpan.finish(`prerender, finished: ${prerenderUrl.url}`);
+    timeSpan.finish(`prerender, finished: ${prerenderLocation.pathname}`);
     return results;
   });
 }

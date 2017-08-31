@@ -74,6 +74,8 @@ export function prerender(config: BuildConfig) {
     buildResults.diagnostics = cleanDiagnostics(ctx.diagnostics);
     config.logger.printDiagnostics(buildResults.diagnostics);
 
+    config.logger.info(`prerendered urls:`, ctx.prerenderedUrls);
+
     // create a nice pretty message stating what happend
     let buildStatus = 'finished';
     let statusColor = 'green';
