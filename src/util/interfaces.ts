@@ -831,7 +831,7 @@ export interface VNodeProdData {
   /**
    * css classes
    */
-  c?: CssClassMap;
+  c?: CssClassMap|string;
   /**
    * styles
    */
