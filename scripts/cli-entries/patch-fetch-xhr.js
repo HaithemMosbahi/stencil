@@ -1,4 +1,6 @@
 var fs = require('fs');
+var path = require('path');
+var http = require('http');
 var Url = require('url');
 var nodeFetch = require('node-fetch');
 
@@ -45,10 +47,18 @@ function createServer(ctx, wwwDir) {
   if (ctx.localPrerenderServer) return;
 
   ctx.localPrerenderServer = http.createServer((request, response) => {
+    var parsedUrl = Url.parse(request.url);
+    var filePath = path.join(wwwDir, parsedUrl.pathname);
 
-    response.write('/**/');
+    fs.readFile(filePath, 'utf-8', function(err, data) {
+      if (err) {
+        response.write('Error fetching: ' + parsedUrl.pathname + ' : ' + err);
+      } else {
+        response.write(data);
+      }
+      response.end();
+    });
 
-    response.end();
   });
 
   ctx.localPrerenderServer.listen(PORT);
