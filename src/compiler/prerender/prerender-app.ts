@@ -79,7 +79,9 @@ function runNextPrerenderUrl(config: BuildConfig, ctx: BuildContext, indexSrcHtm
     // merge any diagnostics we just got from this
     ctx.diagnostics = ctx.diagnostics.concat(results.diagnostics);
 
-    crawlAnchorsForNextUrls(config, ctx, results);
+    if (config.prerender.crawl !== false) {
+      crawlAnchorsForNextUrls(config, ctx, results);
+    }
 
     writePrerenderDest(config, results);
 

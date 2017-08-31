@@ -153,8 +153,8 @@ export function mockStencilSystem() {
     url: url,
 
     vm: {
-      createContext: function(wwwDir, sandbox) {
-        wwwDir;
+      createContext: function(ctx, wwwDir, sandbox) {
+        ctx; wwwDir;
         return vm.createContext(sandbox);
       },
       runInContext: function(code, contextifiedSandbox, options) {

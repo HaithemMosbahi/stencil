@@ -54,10 +54,10 @@ export function optimizeHtml(config: BuildConfig, ctx: BuildContext, doc: Docume
     }
   }
 
-  if (opts.collapseWhitespace !== false) {
-    // reduceHtmlWhitepace is the default
+  if (opts.collapseWhitespace !== false && !config.devMode) {
+    // collapseWhitespace is the default
     try {
-      collapseHtmlWhitepace(doc.body);
+      collapseHtmlWhitepace(doc.documentElement);
 
     } catch (e) {
       results.diagnostics.push({

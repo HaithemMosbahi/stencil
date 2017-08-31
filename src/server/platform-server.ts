@@ -33,6 +33,8 @@ export function createPlatformServer(
   const stylesMap: FilesMap = {};
   const controllerComponents: {[tag: string]: HostElement} = {};
 
+  // init build context
+  ctx = ctx || {};
 
   // initialize Core global object
   const Context: CoreContext = {};
@@ -61,7 +63,7 @@ export function createPlatformServer(
 
   // create the sandboxed context with a new instance of a V8 Context
   // V8 Context provides an isolated global environment
-  config.sys.vm.createContext(appWwwDir, win);
+  config.sys.vm.createContext(ctx, appWwwDir, win);
 
   // execute the global scripts (if there are any)
   runGlobalScripts();

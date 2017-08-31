@@ -1,16 +1,17 @@
+var fs = require('fs');
 var Url = require('url');
 var nodeFetch = require('node-fetch');
 
 
-function patchFetchXhr(wwwDir, window) {
-  patchFetch(wwwDir, window);
+function patchFetchXhr(ctx, wwwDir, window) {
+  patchFetch(ctx, wwwDir, window);
 }
 
 
-function patchFetch(wwwDir, window) {
+function patchFetch(ctx, wwwDir, window) {
 
   function fetch(input, init) {
-    createServer(wwwDir, window);
+    createServer(ctx, wwwDir);
 
     if (typeof input === 'string') {
       // fetch(url)
@@ -32,7 +33,7 @@ function normalizeUrl(window, url) {
 
   if (!parsedUrl.protocol || !parsedUrl.hostname) {
     parsedUrl.protocol = 'http:';
-    parsedUrl.host = 'localhost:53536';
+    parsedUrl.host = 'localhost:' + PORT;
     url = Url.format(parsedUrl);
   }
 
@@ -40,10 +41,19 @@ function normalizeUrl(window, url) {
 }
 
 
-function createServer(wwwDir, window) {
-  if (window.__server) return;
+function createServer(ctx, wwwDir) {
+  if (ctx.localPrerenderServer) return;
 
-  console.log('wwwDir', wwwDir)
+  ctx.localPrerenderServer = http.createServer((request, response) => {
+
+    response.write('/**/');
+
+    response.end();
+  });
+
+  ctx.localPrerenderServer.listen(PORT);
 }
+
+var PORT = 53536;
 
 exports.patchFetchXhr = patchFetchXhr;

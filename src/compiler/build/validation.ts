@@ -137,7 +137,7 @@ export function validateBuildConfig(config: BuildConfig) {
   }
 
   if (config.prerender !== null && config.prerender !== false) {
-    config.prerender = Object.assign(config.prerender || {}, DEFAULT_PRERENDER_CONFIG);
+    config.prerender = Object.assign(DEFAULT_PRERENDER_CONFIG, config.prerender);
 
     if (!path.isAbsolute(config.prerender.prerenderDir)) {
       config.prerender.prerenderDir = normalizePath(path.join(config.rootDir, config.prerender.prerenderDir));

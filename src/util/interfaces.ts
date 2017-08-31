@@ -408,6 +408,7 @@ export interface BuildContext {
 
   moduleBundleCount?: number;
   styleBundleCount?: number;
+  localPrerenderServer?: any;
 
   diagnostics?: Diagnostic[];
   registry?: ComponentRegistry;
@@ -1025,7 +1026,7 @@ export interface StencilSystem {
     resolve(from: string, to: string): string;
   };
   vm?: {
-    createContext(wwwDir: string, sandbox?: any): any;
+    createContext(ctx: BuildContext, wwwDir: string, sandbox?: any): any;
     runInContext(code: string, contextifiedSandbox: any, options?: any): any;
   };
   watch?(paths: string | string[], opts?: any): FSWatcher;

@@ -94,6 +94,11 @@ export function prerender(config: BuildConfig) {
     // this is useful if the next build should do a full build or not
     ctx.lastBuildHadError = hasError(ctx.diagnostics);
 
+    if (ctx.localPrerenderServer) {
+      ctx.localPrerenderServer.close();
+      delete ctx.localPrerenderServer;
+    }
+
     // return what we've learned today
     return buildResults;
   });

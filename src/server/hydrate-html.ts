@@ -74,7 +74,7 @@ export function hydrateHtml(config: BuildConfig, ctx: BuildContext, registry: Co
 
         // terminate all running timers and also remove any
         // event listeners on the window and document
-        // dom.destroy();
+        dom.destroy();
 
       } catch (e) {
         // gahh, something's up
